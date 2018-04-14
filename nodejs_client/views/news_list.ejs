@@ -1,0 +1,362 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Yoanes Berchmans</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="vendor/bootstrap/css/bootstrap.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="vendor/animate/animate.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="vendor/select2/select2.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="vendor/perfect-scrollbar/perfect-scrollbar.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="css/util.css">
+	<link rel="stylesheet" type="text/css" href="css/main.css">
+<!--===============================================================================================-->
+</head>
+<body>
+    
+	<div class="limiter">
+		<div class="container-table100">
+            <div class="row" id="div_form">
+                <div class="col-lg-12">
+                    <div class="panel panel-default" style="width:500px">
+                        <div class="panel-heading">
+                            Form News
+                        </div>
+                
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <form role="form">
+                                        <div class="form-group">
+                                            <label>Title</label>
+                                            <input class="form-control" placeholder="Title" id="news_title">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Content</label>
+                                            <Textarea class="form-control" id="news_content"></Textarea>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Status</label>
+                                            <select class="form-control" id="news_status">
+                                                <% for(var i=0; i<news_status.length; i++){ %>
+                                                <option value="<%= news_status[i].status_id %>"><%= news_status[i].status_name %></option>
+                                                <% } %>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Topics</label>
+                                            <select multiple class="form-control" id="news_topics">
+                                                <% for(var i=0; i<topics.length; i++){ %>
+                                                    <option value="<%= topics[i].topic_id %>"><%= topics[i].topic_name %></option>
+                                                <% } %>
+                                            </select>
+                                        </div>
+                                        <div class="alert alert-info" id="alert">Please fill all fields above.</div>
+                                        <button type="button" class="btn btn-primary" id="btn_save">Save</button>
+                                        <button type="button" class="btn btn-warning" id="btn_cancel">Cancel</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+			<div class="wrap-table100" id="div_table">
+                <div>
+                    <div class="row">
+
+                        <div class="col-lg-12">
+                            <div class="panel panel-primary">
+                                <div class="panel-heading">
+                                    Filter Panel
+                                </div>
+                        
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-lg-3">
+                                            <input type="text" class="form-control" id="search_text" placeholder="Seach...">
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <select class="form-control" id="search_status">
+                                                <option value="all">All</option>
+                                                <% for(var i=0; i<news_status.length; i++){ %>
+                                                <option value="<%= news_status[i].status_name.toLowerCase() %>"><%= news_status[i].status_name %></option>
+                                                <% } %>
+                                            </select>
+                                        </div>
+                                        <div class="col-lg-3">
+                                            <select class="form-control" id="search_topics">
+                                                <option value="all">All</option>
+                                                <% for(var i=0; i<topics.length; i++){ %>
+                                                    <option value="<%= topics[i].topic_id %>"><%= topics[i].topic_name %></option>
+                                                <% } %>
+                                            </select>
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <button class="btn btn-default btn-sm" id="btn_search">Search</button>
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <button class="btn btn-success btn-sm" id="btn_add">Add News</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+				<div class="table100 ver1 m-b-110">
+					<div class="table100-head">
+						<table>
+							<thead>
+								<tr class="row100 head">
+									<th class="cell100 column1 align-center">No</th>
+									<th class="cell100 column3 align-center">News Title</th>
+									<th class="cell100 column3 align-center">Content</th>
+									<th class="cell100 column2 align-center">Topics</th>
+                                    <th class="cell100 column2 align-center">Status</th>
+                                    <th class="cell100 column5 align-center">Created Date</th>
+                                    <th class="cell100 column5 align-center">Modificate</th>
+								</tr>
+							</thead>
+						</table>
+					</div>
+
+					<div class="table100-body js-pscroll">
+						<table>
+							<tbody id="data_table">
+                                <% for(var i=0; i<news.length; i++){ %>
+								<tr class="row100 body" id="row_num<%= i %>">
+                                    <td class="cell100 column1 align-center"><%= i+1 %></td>
+                                    <td class="cell100 column3 align-left"><%= news[i].news_title %></td>
+                                    <td class="cell100 column3 align-left"><%= news[i].news_content %></td>
+                                    <td class="cell100 column2 align-left">
+                                        <ul>
+                                        <% for(var j=0; j<news[i].topics.length; j++){ %>
+                                            <li>- <%= news[i].topics[j].name %></li>
+                                        <% } %>
+                                        </ul>
+                                    </td>
+                                    <td class="cell100 column2 align-center"><%= news[i].news_status_name %></td>
+                                    <td class="cell100 column5 align-center"><%= news[i].news_createdAt %></td>
+                                    <td class="cell100 column5 align-center"><button class="btn btn-danger btn-sm" onclick="deletedata(<%= news[i].news_id %>)">Delete</button></td>
+                                </tr>
+                                <% } %>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+        </div>
+
+	</div>
+
+<!--===============================================================================================-->
+	<script src="vendor/jquery/jquery-3.2.1.min.js"></script>
+<!--===============================================================================================-->
+	<script src="vendor/bootstrap/js/popper.js"></script>
+	<script src="vendor/bootstrap/js/bootstrap.min.js"></script>
+<!--===============================================================================================-->
+	<script src="vendor/select2/select2.min.js"></script>
+<!--===============================================================================================-->
+	<script src="vendor/perfect-scrollbar/perfect-scrollbar.min.js"></script>
+	<script>
+		$('.js-pscroll').each(function(){
+			var ps = new PerfectScrollbar(this);
+
+			$(window).on('resize', function(){
+				ps.update();
+			})
+        });
+
+        function deletedata(news_id)
+        {
+            if (confirm("Are you sure want to delete this record ?")) {
+                $.ajax({ 
+                    type: "DELETE",
+                    dataType: "jsonp",
+                    crossDomain: true,
+                    url: "https://change_url_here.com/api/delete/news/" + news_id,
+                    success: function(res){
+                        setInterval(function(){
+                            location.reload();
+                        }, 3000);
+                    },
+                    error: function(err)
+                    {
+                        setInterval(function(){
+                            location.reload();
+                        }, 3000);
+                    }
+                });
+            } 
+        }
+
+        $(document).ready(function(){
+            $('#myModal').modal('show');
+
+            
+            
+            $("#div_form").css("display", "none");
+
+            $("#btn_add").on("click", function(){
+                $("#div_form").css("display", "block");
+                $("#div_table").css("display", "none");
+            });
+
+            $("#btn_cancel").on("click", function(){
+                $("#div_form").css("display", "none");
+                $("#div_table").css("display", "block");
+            });
+
+            $("#btn_search").on("click", function(){
+                var search_text = ($("#search_text").val() != "")?$("#search_text").val():"~";
+                var search_status = $("#search_status").val();
+                var search_topic = ($("#search_topics").val() == "all")?"~":$("#search_topics").val();
+
+                if(search_text != "")
+                {
+                    $.ajax({ 
+                        type: "GET",
+                        dataType: "jsonp",
+                        crossDomain: true,
+                        url: "https://change_url_here.com/api/get/news/" + search_status + "/" + search_topic + "/" + search_text,
+                        success: function(res){
+                            // alert(JSON.stringify(res));
+                            $("#data_table").empty();
+
+                            if(res && res !== null && res !== undefined && res.length > 0)
+                            {
+                                var str = "";
+                                for(var i=0; i<res.length; i++)
+                                {   
+                                    str += "<tr>";
+                                    str += "<td class=\"cell100 column1 align-center\">"+ (i + 1) +"</td>";
+                                    str += "<td class=\"cell100 column3 align-left\">"+ res[i].news_title +"</td>";
+                                    str += "<td class=\"cell100 column3 align-left\">"+ res[i].news_content +"</td>";
+                                    str += "<td class=\"cell100 column2 align-left\">";
+                                    for(var j=0; j<res[i].topics.length; j++)
+                                    {
+                                        str += "<li>- "+ res[i].topics[j].name +"</li>";
+                                    }
+                                    str += "</td>";
+                                    str += "<td class=\"cell100 column2 align-center\">"+ res[i].news_status_name +"</td>";
+                                    str += "<td class=\"cell100 column5 align-center\">"+ res[i].news_createdAt +"</td>";
+                                    str += "<td class=\"cell100 column5 align-center\"><button class=\"btn btn-danger btn-sm\" onclick=\"deletedata("+ res[i].news_id +")\">Delete</button></td>";
+                                    str += "</tr>";
+                                }
+
+                                $("#data_table").append(str);
+                            }
+                            else $("#data_table").append("<tr class='class=\"row100 body\"' ><td colspan='7' class=\"cell100 column1\">No data shown.</td></tr>");
+                        },
+                        error: function(err)
+                        {
+                            //nothing to do
+                        }
+                    });
+                }
+
+            });
+
+            $("#btn_save").on("click", function(){
+                var title = $("#news_title").val();
+                var content = $("#news_content").val();
+                var topics = $("#news_topics").val();
+                topics = topics.join('_');
+                var status = $("#news_status").val();
+
+                var form_submit = false;
+                if(title != "" && content != "" && topics != "" && status != "")
+                    form_submit = true;
+                
+                if(form_submit)
+                {
+                    $.ajax({ 
+                        type: "POST",
+                        // dataType: "json",
+                        // dataType: 'text',
+                        // contentType: "application/json",
+                        // crossDomain: true,
+                        url: "https://change_url_here.com/api/create/news?news_title="+ title +"&news_content="+ content +"&topics="+ topics +"&news_status_id="+ status,
+                        // url: "https://change_url_here.com/api/create",
+                        // data: {
+                        //     news_title:title,
+                        //     news_content:content,
+                        //     topics:topics,
+                        //     news_status_id:status
+                        // },
+                        success: function(res){
+                            $("#alert").removeClass("alert-info").removeClass("alert-danger").addClass("alert-success");
+                            $("#alert").html("Success! Wait...reloading this page.");
+                            setInterval(function(){
+                                location.reload();
+                            }, 3000);
+                        },
+                        error: function(err)
+                        {
+                            // $("#alert").removeClass("alert-info").removeClass("alert-success").addClass("alert-danger");
+                            // $("#alert").html("Ooops! There is a problem on our server.");
+
+                            $("#alert").removeClass("alert-info").removeClass("alert-danger").addClass("alert-success");
+                            $("#alert").html("Success! Wait...reloading this page.");
+                            setInterval(function(){
+                                location.reload();
+                            }, 3000);
+                        }
+                    });
+                }
+                else{
+                    if(title == "")
+                        $("#news_title").parent().addClass("has-error");
+                    
+                    if(content == "")
+                        $("#news_content").parent().addClass("has-error");
+                    
+                    if(topics == "")
+                        $("#news_topics").parent().addClass("has-error");
+
+                    if(status == "")
+                        $("#news_status").parent().addClass("has-error");
+                    
+                    $("#alert").removeClass("alert-info").addClass("alert-danger");
+                    $("#alert").html("There are one or more fields still blank.");
+                }
+            });
+
+            $("#news_title").on("change paste keyup", function(){
+                if ($(this).val() != "")
+                    $(this).parent().removeClass("has-error").addClass("has-success");
+                else $(this).parent().removeClass("has-success").addClass("has-error");
+            });
+
+            $("#news_content").on("change paste keyup", function(){
+                if ($(this).val() != "")
+                    $(this).parent().removeClass("has-error").addClass("has-success");
+                else $(this).parent().removeClass("has-success").addClass("has-error");
+            });
+
+            $("#news_topics").on("change", function(){
+                if ($(this).val() != "")
+                    $(this).parent().removeClass("has-error").addClass("has-success");
+                else $(this).parent().removeClass("has-success").addClass("has-error");
+            });
+        });
+
+
+	</script>
+
+<!--===============================================================================================-->
+	<script src="js/main.js"></script>
+
+</body>
+</html>

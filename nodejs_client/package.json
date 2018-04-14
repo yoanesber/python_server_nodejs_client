@@ -1,0 +1,19 @@
+{
+  "name": "kumparan",
+  "version": "1.0.0",
+  "description": "Yoanes Berchmans' Test Case - Front End",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index"
+  },
+  "author": "Yoanes Berchmans",
+  "license": "ISC",
+  "dependencies": {
+    "async": "^2.6.0",
+    "ejs": "^2.5.8",
+    "express": "^4.16.3",
+    "html": "^1.0.0",
+    "http": "0.0.0",
+    "https": "^1.0.0"
+  }
+}
